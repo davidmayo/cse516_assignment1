@@ -1,4 +1,4 @@
-# Source code for CSE 516-50 proramming assignment #1
+# Source code for CSE 516-50 programming assignment #1
 # Author: David Mayo
 #
 # Python>=3.8.0 is needed to run the code.
