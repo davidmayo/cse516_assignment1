@@ -1,7 +1,13 @@
+# Source code for CSE 516-50 proramming assignment #1
+# Author: David Mayo
+#
+# Python>=3.8.0 is needed to run the code.
+# matplotlib>=2.2.0 is needed to render plots.
+
 import math
 import sys
+from pathlib import Path
 from typing import Iterable, List, Tuple, Union
-
 try:
     import matplotlib.pyplot as plt
     _matplotlib_available = True
@@ -105,7 +111,6 @@ if _matplotlib_available:
     )
     fig.set_size_inches(7.5, 10.5)
     fig.set_dpi(300)
-    print(axes)
     ax1: plt.Axes = axes[0][0]
     ax2: plt.Axes = axes[0][1]
     ax3: plt.Axes = axes[1][0]
@@ -121,7 +126,7 @@ else:
     ax5 = None
 axes = [ax1, ax2, ax3, ax4, ax5]
 
-def analyze_n(n: int, ax: Union[plt.Axes, None] = None) -> None:
+def analyze_n(n: int, ax: Union["plt.Axes", None] = None) -> None:
     """Do analysis of ALOHA network of size `n`, plotting to Axes `ax`, if
     possible."""
     print()
@@ -132,8 +137,8 @@ def analyze_n(n: int, ax: Union[plt.Axes, None] = None) -> None:
     max_p_specific, max_throughput_specific = find_max(specific_points)
     print(f"Max throughput is p={max_p:.4f}, throughput={max_throughput:.4f}")
     print(
-        f"Max throughput (of given p values to analyze) is f"
-        + "p={max_p_specific:.4f}, throughput={max_throughput_specific:.4f}"
+        f"Max throughput (of given p values to analyze) is "
+        + f"p={max_p_specific:.4f}, throughput={max_throughput_specific:.4f}"
     )
     pass
 
@@ -166,12 +171,27 @@ for index, n in enumerate(range(1, 5+1)):
     analyze_n(n=n, ax=axes[index])
 
 if _matplotlib_available:
-    plt.savefig(f"plots.png", bbox_inches="tight")
-    # plt.show()
+    folder_path = Path(__file__).parent.expanduser().resolve()
+    image_path = folder_path / "plots.png"
+    try:
+        print(f"Saving plots to {image_path} . . . ", end="")
+        plt.savefig(image_path.__fspath__(), bbox_inches="tight")
+        print(f"SUCCESS!")
+    except Exception as exc:
+        print(f"FAILURE!")
+        print(f"Unable to save image to {image_path}")
+        print(f"Error details:\n{exc}")
+    print(f"Displaying plots . . . ", end="")
+    plt.show()
+    print("DONE")
 else:
-    print(f"ERROR! matplotlib not available. Plots will not be displayed.")
+    print(
+        f"ERROR! matplotlib (version >= 2.2) not available. "
+        + f"Plots will not be displayed/saved."
+    )
+    print()
     print(f"matplotlib can be installed with:")
     print()
-    print(f"{sys.executable} -m pip install matplotlib")
+    print(f"{sys.executable} -m pip install matplotlib>=2.2.0")
     print()
     print(f"Program will exit.")
